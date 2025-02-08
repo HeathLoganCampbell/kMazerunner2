@@ -31,6 +31,7 @@ public class GameWorld
 //        this.world.setGameRuleValue("doDaylightCycle", "false");
         int wallHeight = 10;
 
+        long start = System.currentTimeMillis();
         int scalar = 3;
         for (int x = 0; x < this.map.getTotalWidth(); x++) {
             System.out.println("Maze Generated " + Math.round(((float) x / this.map.getTotalWidth()) * 100) + "%");
@@ -84,12 +85,13 @@ public class GameWorld
                 }
             }
         }
+
+        System.out.println("Maze Generated " + (System.currentTimeMillis() - start) + "ms");
     }
 
     private void setBlock(int x, int y, int z, Material material)
     {
-//        this.world.getBlockAt(x, y, z).setType(material, false);
-        FastBlockUtil.setBlock(this.world.getBlockAt(x, y, z).getLocation(), material.createBlockData());
+        FastBlockUtil.setBlock(this.world, x, y, z, material.createBlockData());
     }
 
     public void teleport(Player player)
