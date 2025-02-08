@@ -31,7 +31,14 @@ public class GameWorld
                 int sample = this.map.getSample(x, z);
                 if(sample == PATH || sample == DEADEND)
                 {
-                    this.world.getBlockAt(x * scalar, 1, z * scalar).setBlockData(Material.STONE.createBlockData(), false);
+                    for (int dx = 0; dx < scalar; dx++) {
+                        for (int dz = 0; dz < scalar; dz++) {
+                            int newX = x * scalar + dx;
+                            int newZ = z * scalar + dz;
+                            this.world.getBlockAt(newX, 1, newZ).setBlockData(Material.STONE.createBlockData(), false);
+                        }
+                    }
+
                     if(sample == DEADEND)
                     {
                         this.world.getBlockAt(x * scalar, 2, z * scalar).setBlockData(Material.CHEST.createBlockData(), false);
@@ -40,16 +47,28 @@ public class GameWorld
 
                 if(sample == WALL)
                 {
-                    this.world.getBlockAt(x * scalar, 1, z * scalar).setBlockData(Material.STONE.createBlockData(), false);
-                    this.world.getBlockAt(x * scalar, 2, z * scalar).setBlockData(Material.STONE.createBlockData(), false);
-                    this.world.getBlockAt(x * scalar, 3, z * scalar).setBlockData(Material.STONE.createBlockData(), false);
-                    this.world.getBlockAt(x * scalar, 4, z * scalar).setBlockData(Material.STONE.createBlockData(), false);
-                    this.world.getBlockAt(x * scalar, 5, z * scalar).setBlockData(Material.STONE.createBlockData(), false);
+                    for (int dx = 0; dx < scalar; dx++) {
+                        for (int dz = 0; dz < scalar; dz++) {
+                            int newX = x * scalar + dx;
+                            int newZ = z * scalar + dz;
+                            this.world.getBlockAt(newX, 1, newZ).setBlockData(Material.STONE.createBlockData(), false);
+                            this.world.getBlockAt(newX, 2, newZ).setBlockData(Material.STONE.createBlockData(), false);
+                            this.world.getBlockAt(newX, 3, newZ).setBlockData(Material.STONE.createBlockData(), false);
+                            this.world.getBlockAt(newX, 4, newZ).setBlockData(Material.STONE.createBlockData(), false);
+                            this.world.getBlockAt(newX, 5, newZ).setBlockData(Material.STONE.createBlockData(), false);
+                        }
+                    }
                 }
 
                 if(sample == TEAM_BASE)
                 {
-                    this.world.getBlockAt(x * scalar, 1, z * scalar).setBlockData(Material.GRASS_BLOCK.createBlockData(), false);
+                    for (int dx = 0; dx < scalar; dx++) {
+                        for (int dz = 0; dz < scalar; dz++) {
+                            int newX = x * scalar + dx;
+                            int newZ = z * scalar + dz;
+                            this.world.getBlockAt(newX, 1, newZ).setBlockData(Material.GRASS_BLOCK.createBlockData(), false);
+                        }
+                    }
                 }
             }
         }
