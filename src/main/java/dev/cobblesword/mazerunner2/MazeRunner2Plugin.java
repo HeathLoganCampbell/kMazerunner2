@@ -1,5 +1,6 @@
 package dev.cobblesword.mazerunner2;
 
+import dev.cobblesword.mazerunner2.lobby.Lobby;
 import dev.cobblesword.mazerunner2.world.GameWorld;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -14,6 +15,7 @@ public class MazeRunner2Plugin extends JavaPlugin implements Listener
     @Override
     public void onEnable()
     {
+        Lobby lobby = new Lobby(this);
         gameWorld = new GameWorld(1);
         Bukkit.getPluginManager().registerEvents(this, this);
     }
