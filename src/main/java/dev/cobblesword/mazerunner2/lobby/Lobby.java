@@ -1,7 +1,9 @@
 package dev.cobblesword.mazerunner2.lobby;
 
+import dev.cobblesword.mazerunner2.game.Game;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -13,6 +15,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.UUID;
 
 public class Lobby implements Listener
@@ -20,9 +23,14 @@ public class Lobby implements Listener
     private HashSet<UUID> playeresWaiting = new HashSet<>();
     private boolean gameStarted = false;
     private int countdownTilGame = 10;
+    private Game game;
 
-    public Lobby(JavaPlugin plugin)
+    public Lobby(JavaPlugin plugin, Game game)
     {
+        this.game = game;
+
+        this.game.init();
+
         Bukkit.getPluginManager().registerEvents(this, plugin);
         new BukkitRunnable() {
             @Override
@@ -35,10 +43,17 @@ public class Lobby implements Listener
 
     public void update()
     {
-        if(countdownTilGame <= 0)
+        if(countdownTilGame < 0)
+        {
+            return;
+        }
+
+        if(countdownTilGame == 0)
         {
             gameStarted = true;
+            this.game.start((List<Player>) Bukkit.getOnlinePlayers().stream().toList());
             playeresWaiting.clear();
+            countdownTilGame = -1000;
             // Start game
             return;
         }

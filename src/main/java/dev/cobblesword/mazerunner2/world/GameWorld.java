@@ -30,8 +30,12 @@ public class GameWorld
     {
         this.seed = seed;
         this.map = new Map(this.seed, 5, 5);
-        this.map.generateMap();
         this.random = new Random(seed);
+    }
+
+    public void generateWorld()
+    {
+        this.map.generateMap();
 
         WorldCreator creator = new WorldCreator("GW-" + UUID.randomUUID());
         creator.generator(new VoidChunkGenerator(this.map)); // Use custom generator
