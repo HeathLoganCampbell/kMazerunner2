@@ -3,10 +3,13 @@ package dev.cobblesword.mazerunner2.map;
 import dev.cobblesword.mazerunner2.map.tiles.MazeTile;
 import dev.cobblesword.mazerunner2.map.tiles.TeamBaseTile;
 import dev.cobblesword.mazerunner2.maze.IMazeRender;
+import org.bukkit.Warning;
 import org.bukkit.scoreboard.Team;
 
 import java.awt.*;
 import java.util.Random;
+
+import static dev.cobblesword.mazerunner2.maze.BasicMazeGenerator.*;
 
 public class Map
 {
@@ -41,6 +44,42 @@ public class Map
                 }
             }
         }
+    }
+
+    public int getSample(int x, int y)
+    {
+        int tileX = x / 16;
+        int tileY = y / 16;
+
+        Tile tile = this.getTile(tileX, tileY);
+        int xFrac = x % tile.getWidth();
+        int yFrac = y % tile.getHeight();
+        int sample = tile.getSample(xFrac, yFrac);
+
+        // Connect tiles
+        if(tileX != 0  && tile instanceof MazeTile)
+        {
+            if(xFrac == tile.getWidth() / 2 && yFrac == 0 ) sample = PATH;
+            if(xFrac == tile.getWidth() / 2 && yFrac == 1 ) sample = PATH;
+        }
+
+        if(tileY != 0 && tile instanceof MazeTile)
+        {
+            if(xFrac == 0 && yFrac == tile.getHeight() / 2 ) sample = PATH;
+            if(xFrac == 1 && yFrac == tile.getHeight() / 2 ) sample = PATH;
+        }
+
+        return sample;
+    }
+
+    public int getTotalWidth()
+    {
+        return this.tileWidth * 16;
+    }
+
+    public int getTotalHeight()
+    {
+        return this.tileHeight * 16;
     }
 
     public int getTileWidth()

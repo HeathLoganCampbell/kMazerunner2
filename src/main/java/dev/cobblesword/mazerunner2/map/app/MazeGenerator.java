@@ -24,34 +24,14 @@ public class MazeGenerator extends JPanel {
         map.GenerateMap();
         BufferedImage bufferedImage = new BufferedImage(map.getTileWidth() * tileSize, map.getTileHeight() * tileSize, BufferedImage.TYPE_INT_RGB);
 
-        for (int tileY = 0; tileY < map.getTileHeight(); tileY++)
+        for (int tileY = 0; tileY < map.getTotalHeight(); tileY++)
         {
-            for (int tileX = 0; tileX < map.getTileWidth(); tileX++)
+            for (int tileX = 0; tileX < map.getTotalWidth(); tileX++)
             {
-                Tile tile = map.getTile(tileX, tileY);
-                for (int i = 0; i < tile.getHeight(); i++)
-                {
-                    for (int j = 0; j < tile.getWidth(); j++)
-                    {
-                        int sample1 = tile.getSample(j, i);
-                        if(sample1 == WALL) bufferedImage.setRGB(j + (tileX*tileSize) , i + (tileY*tileSize), 0x000000);
-                        if(sample1 == PATH) bufferedImage.setRGB(j + (tileX*tileSize) , i + (tileY*tileSize), 0xFFFFFF);
-                        if(sample1 == DEADEND) bufferedImage.setRGB(j  + (tileX*tileSize), i + (tileY*tileSize), 0xFF0000);
-                    }
-                }
-
-                // Connect tiles
-                if(tileX != 0  && tile instanceof MazeTile)
-                {
-                    bufferedImage.setRGB((tileX*tileSize), (tileSize /2) + (tileY*tileSize), 0xFFFFFF);
-                    bufferedImage.setRGB((tileX*tileSize)+ + 1, (tileSize /2) + (tileY*tileSize), 0xFFFFFF);
-                }
-
-                if(tileY != 0 && tile instanceof MazeTile)
-                {
-                    bufferedImage.setRGB((tileSize /2) + (tileX*tileSize) , (tileY*tileSize), 0xFFFFFF);
-                    bufferedImage.setRGB((tileSize /2) + (tileX*tileSize) , (tileY*tileSize) + 1, 0xFFFFFF);
-                }
+                int sample1 =  map.getSample(tileX, tileY);
+                if(sample1 == WALL) bufferedImage.setRGB(tileX, tileY, 0x000000);
+                if(sample1 == PATH) bufferedImage.setRGB(tileX, tileY, 0xFFFFFF);
+                if(sample1 == DEADEND) bufferedImage.setRGB(tileX, tileY, 0xFF0000);
             }
         }
 
