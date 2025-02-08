@@ -1,6 +1,7 @@
 package dev.cobblesword.mazerunner2.world;
 
 import dev.cobblesword.mazerunner2.map.Map;
+import dev.cobblesword.mazerunner2.utils.FastBlockUtil;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 
@@ -18,7 +19,7 @@ public class GameWorld
     public GameWorld(int seed)
     {
         this.seed = seed;
-        this.map = new Map(this.seed, 12, 12);
+        this.map = new Map(this.seed, 5, 5);
         this.map.generateMap();
         Random random = new Random(seed);
 
@@ -41,14 +42,14 @@ public class GameWorld
                         for (int dz = 0; dz < scalar; dz++) {
                             int newX = x * scalar + dx;
                             int newZ = z * scalar + dz;
-                            this.world.getBlockAt(newX, 1, newZ).setType(Material.STONE, false);
+                            setBlock(newX, 1, newZ, Material.STONE);
                         }
                     }
 
                     if(sample == DEADEND)
                     {
                         if (random.nextInt(5) == 1) {
-                            this.world.getBlockAt(x * scalar + 1, 2, z * scalar + 1).setType(Material.CHEST, false);
+                            setBlock(x * scalar + 1, 2, z * scalar + 1, Material.CHEST);
                         }
                     }
                 }
@@ -65,7 +66,7 @@ public class GameWorld
                                     material = Material.CRACKED_STONE_BRICKS;
                                 }
 
-                                this.world.getBlockAt(newX, i, newZ).setType(material, false);
+                                setBlock(newX, i, newZ, material);
                             }
                         }
                     }
@@ -77,12 +78,18 @@ public class GameWorld
                         for (int dz = 0; dz < scalar; dz++) {
                             int newX = x * scalar + dx;
                             int newZ = z * scalar + dz;
-                            this.world.getBlockAt(newX, 1, newZ).setType(Material.GRASS_BLOCK, false);
+                            setBlock(newX, 1, newZ, Material.GRASS_BLOCK);
                         }
                     }
                 }
             }
         }
+    }
+
+    private void setBlock(int x, int y, int z, Material material)
+    {
+//        this.world.getBlockAt(x, y, z).setType(material, false);
+        FastBlockUtil.setBlock(this.world.getBlockAt(x, y, z).getLocation(), material.createBlockData());
     }
 
     public void teleport(Player player)
