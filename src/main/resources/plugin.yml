@@ -1,3 +1,4 @@
 name: kMazeRunner2
 main: dev.cobblesword.mazerunner2.MazeRunner2Plugin
 version: 1.4.1
+api-version: '1.20'

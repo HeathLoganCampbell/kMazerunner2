@@ -26,13 +26,14 @@ public class Map
         this.seed = seed;
     }
 
-    public void GenerateMap()
+    public void generateMap()
     {
         Random random = new Random(seed);
-        this.tiles[1][1] = new TeamBaseTile(16, 16);
-        this.tiles[1][3] = new TeamBaseTile(16, 16);
-        this.tiles[3][1] = new TeamBaseTile(16, 16);
-        this.tiles[3][3] = new TeamBaseTile(16, 16);
+
+        this.tiles[(this.tileWidth / 6) * 3][(this.tileHeight / 6) * 3] = new TeamBaseTile(16, 16);
+        this.tiles[(this.tileWidth / 6) * 3][(this.tileHeight / 6) * 5] = new TeamBaseTile(16, 16);
+        this.tiles[(this.tileWidth / 6) * 5][(this.tileHeight / 6) * 3] = new TeamBaseTile(16, 16);
+        this.tiles[(this.tileWidth / 6) * 5][(this.tileHeight / 6) * 5] = new TeamBaseTile(16, 16);
 
         for (int i = 0; i < this.tileHeight; i++)
         {
@@ -52,6 +53,7 @@ public class Map
         int tileY = y / 16;
 
         Tile tile = this.getTile(tileX, tileY);
+        if(tile == null) return -1;
         int xFrac = x % tile.getWidth();
         int yFrac = y % tile.getHeight();
         int sample = tile.getSample(xFrac, yFrac);

@@ -21,7 +21,7 @@ public class MazeGenerator extends JPanel {
         super.paintComponent(g);
 
         Map map = new Map(1, 5, 5);
-        map.GenerateMap();
+        map.generateMap();
         BufferedImage bufferedImage = new BufferedImage(map.getTileWidth() * tileSize, map.getTileHeight() * tileSize, BufferedImage.TYPE_INT_RGB);
 
         for (int tileY = 0; tileY < map.getTotalHeight(); tileY++)
