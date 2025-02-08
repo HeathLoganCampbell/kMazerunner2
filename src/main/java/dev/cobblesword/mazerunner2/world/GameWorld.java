@@ -5,6 +5,7 @@ import dev.cobblesword.mazerunner2.map.Map;
 import dev.cobblesword.mazerunner2.map.Tile;
 import dev.cobblesword.mazerunner2.map.tiles.MazeTile;
 import dev.cobblesword.mazerunner2.utils.FastBlockUtil;
+import dev.cobblesword.mazerunner2.utils.Vector2d;
 import org.bukkit.*;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
@@ -13,8 +14,8 @@ import org.bukkit.event.world.WorldInitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static dev.cobblesword.mazerunner2.maze.BasicMazeGenerator.*;
 
@@ -140,9 +141,29 @@ public class GameWorld
 
     public void regenerateMaze()
     {
-        for (int x = 0; x < this.map.getTileWidth(); x++) {
-            for (int z = 0; z < this.map.getTileHeight(); z++) {
-                map.regenerateTile(x,z);
+        HashMap<Vector2d, List<Player>> playersOnTiles = new HashMap<>();
+        for (Player player : Bukkit.getOnlinePlayers())
+        {
+            Vector2d vector2d = new Vector2d((player.getLocation().getBlockX() / 3) >> 4, (player.getLocation().getBlockZ()/3) >> 4);
+            List<Player> playersOnTile = playersOnTiles.getOrDefault(vector2d, new ArrayList<>());
+            playersOnTile.add(player);
+            playersOnTiles.put(vector2d, playersOnTile);
+            System.out.println("added " + player.getName() + " to " + vector2d);
+        }
+
+        for (int x = 0; x < this.map.getTileWidth(); x++)
+        {
+            for (int z = 0; z < this.map.getTileHeight(); z++)
+            {
+                Vector2d vector2d = new Vector2d(x, z);
+                if(!playersOnTiles.containsKey(vector2d))
+                {
+                    map.regenerateTile(x,z);
+                }
+                else
+                {
+                    System.out.println("TileX: "  + x + " TileZ: " + z + " ][ " + playersOnTiles.get(vector2d).stream().map(player -> player.getName()).collect(Collectors.joining(", ")));
+                }
             }
         }
 
