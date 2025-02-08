@@ -1,0 +1,43 @@
+From 393df5f372470cf32fb7465c0e9c6e155ed5db11 Mon Sep 17 00:00:00 2001
+From: HeathLoganCampbell <Heath.campbell2@datacom.co.nz>
+Date: Sun, 9 Feb 2025 01:30:51 +1100
+Subject: [PATCH] KMazeRunner2 - Do not search for spawn
+When creating a world, the server will spend about 3 seconds searching
+for a quality spawn point. Since the world is a void world, it'll never
+find one. meaning the world will take 3 seconds longer for nothing.
+
+diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
+index 779b939ee..c3cc4e628 100644
+--- a/src/main/java/net/minecraft/server/MinecraftServer.java
++++ b/src/main/java/net/minecraft/server/MinecraftServer.java
+@@ -728,27 +728,6 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
+             int l = 0;
+             int i1 = -1;
+ 
+-            for (int j1 = 0; j1 < MathHelper.square(11); ++j1) {
+-                if (j >= -5 && j <= 5 && k >= -5 && k <= 5) {
+-                    BlockPosition blockposition1 = WorldProviderNormal.getSpawnPosInChunk(worldserver, new ChunkCoordIntPair(chunkcoordintpair.x + j, chunkcoordintpair.z + k));
+-
+-                    if (blockposition1 != null) {
+-                        iworlddataserver.setSpawn(blockposition1, 0.0F);
+-                        break;
+-                    }
+-                }
+-
+-                if (j == k || j < 0 && j == -k || j > 0 && j == 1 - k) {
+-                    int k1 = l;
+-
+-                    l = -i1;
+-                    i1 = k1;
+-                }
+-
+-                j += l;
+-                k += i1;
+-            }
+-
+             if (flag) {
+                 worldserver.registryAccess().lookup(Registries.CONFIGURED_FEATURE).flatMap((iregistry) -> {
+                     return iregistry.get(MiscOverworldFeatures.BONUS_CHEST);
+-- 
+2.39.5 (Apple Git-154)
+

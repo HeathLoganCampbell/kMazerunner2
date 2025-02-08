@@ -5,6 +5,8 @@ import dev.cobblesword.mazerunner2.utils.FastBlockUtil;
 import org.bukkit.*;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.world.WorldInitEvent;
 
 import java.util.Random;
 import java.util.UUID;
@@ -26,10 +28,15 @@ public class GameWorld
 
         WorldCreator creator = new WorldCreator("GW-" + UUID.randomUUID());
         creator.generator(new VoidChunkGenerator(this.map)); // Use custom generator
+        creator.keepSpawnInMemory(false);
+        creator.type(WorldType.FLAT);
+        creator.generateStructures(false);
         this.world = Bukkit.createWorld(creator);
         this.world.setAutoSave(false);
         this.world.setDifficulty(Difficulty.NORMAL);
-//        this.world.setGameRuleValue("doDaylightCycle", "false");
+        this.world.setGameRuleValue("doMobSpawning", "false");
+        this.world.setGameRuleValue("randomTickSpeed", "0");
+        this.world.setGameRuleValue("doDaylightCycle", "false");
         int wallHeight = 10;
 
         BlockData stone = Material.STONE.createBlockData();

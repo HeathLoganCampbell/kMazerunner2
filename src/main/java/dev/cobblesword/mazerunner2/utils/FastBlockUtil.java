@@ -15,9 +15,6 @@ import org.bukkit.craftbukkit.v1_21_R3.CraftWorld;
 
 public class FastBlockUtil
 {
-    private static final BlockData AIR_BLOCKDATA = Bukkit.createBlockData(Material.AIR);
-    protected static final IBlockData AIR = ((CraftBlockData) AIR_BLOCKDATA).getState();
-
     public static void setBlock(World world, int x, int y, int z, BlockData bd) {
         CraftBlockData craft = (CraftBlockData) bd;
         net.minecraft.world.level.World nmsWorld = ((CraftWorld) world).getHandle();
