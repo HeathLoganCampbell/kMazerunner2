@@ -21,6 +21,12 @@ public class MazeRunner2Plugin extends JavaPlugin implements Listener
     @EventHandler
     public void onChat(PlayerChatEvent event) {
         Player player = event.getPlayer();
-        gameWorld.teleport(player);
+        if(event.getMessage().contains("maze")) {
+            gameWorld.teleport(player);
+        }
+
+        if(event.getMessage().contains("new")) {
+            gameWorld.regenerateMaze();
+        }
     }
 }

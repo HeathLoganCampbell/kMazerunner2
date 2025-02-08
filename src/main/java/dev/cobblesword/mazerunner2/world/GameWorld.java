@@ -1,12 +1,17 @@
 package dev.cobblesword.mazerunner2.world;
 
+import dev.cobblesword.mazerunner2.MazeRunner2Plugin;
 import dev.cobblesword.mazerunner2.map.Map;
+import dev.cobblesword.mazerunner2.map.Tile;
+import dev.cobblesword.mazerunner2.map.tiles.MazeTile;
 import dev.cobblesword.mazerunner2.utils.FastBlockUtil;
 import org.bukkit.*;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.world.WorldInitEvent;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Random;
 import java.util.UUID;
@@ -18,13 +23,14 @@ public class GameWorld
     private int seed;
     private World world;
     private Map map;
+    private Random random;
 
     public GameWorld(int seed)
     {
         this.seed = seed;
         this.map = new Map(this.seed, 5, 5);
         this.map.generateMap();
-        Random random = new Random(seed);
+        this.random = new Random(seed);
 
         WorldCreator creator = new WorldCreator("GW-" + UUID.randomUUID());
         creator.generator(new VoidChunkGenerator(this.map)); // Use custom generator
@@ -37,8 +43,15 @@ public class GameWorld
         this.world.setGameRuleValue("doMobSpawning", "false");
         this.world.setGameRuleValue("randomTickSpeed", "0");
         this.world.setGameRuleValue("doDaylightCycle", "false");
+
+        drawMapToWorld();
+    }
+
+    public void drawMapToWorld()
+    {
         int wallHeight = 10;
 
+        BlockData air = Material.AIR.createBlockData();
         BlockData stone = Material.STONE.createBlockData();
         BlockData grassBlock = Material.GRASS_BLOCK.createBlockData();
         BlockData stoneBrick = Material.STONE_BRICKS.createBlockData();
@@ -69,6 +82,12 @@ public class GameWorld
                             int newX = x * scalar + dx;
                             int newZ = z * scalar + dz;
                             setBlock(newX, 1, newZ, stoneBrick);
+
+                            // clear existing blocks
+                            for (int i = 2; i < 12; i++)
+                            {
+                                setBlock(newX, i, newZ, air);
+                            }
                         }
                     }
 
@@ -117,6 +136,38 @@ public class GameWorld
     private void setBlock(int x, int y, int z, BlockData blockData)
     {
         FastBlockUtil.setBlock(this.world, x, y, z, blockData);
+    }
+
+    public void regenerateMaze()
+    {
+        for (int x = 0; x < this.map.getTileWidth(); x++) {
+            for (int z = 0; z < this.map.getTileHeight(); z++) {
+                map.regenerateTile(x,z);
+            }
+        }
+
+        drawMapToWorld();
+
+        for (int x = 0; x <  (this.map.getTotalWidth() * 3) >> 4; x++)
+        {
+            for (int z = 0; z < (this.map.getTotalHeight() * 3) >> 4; z++)
+            {
+                FastBlockUtil.recalculateChunkLighting(this.world, x, z);
+                this.world.refreshChunk(x, z);
+            }
+        }
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (int x = 0; x < (map.getTotalWidth() * 3) >> 4; x++) {
+                    for (int z = 0; z < (map.getTotalHeight() * 3) >> 4; z++) {
+                        world.refreshChunk(x, z);
+                    }
+                }
+
+            }
+        }.runTaskLater(JavaPlugin.getPlugin(MazeRunner2Plugin.class), 9);
     }
 
     public void teleport(Player player)

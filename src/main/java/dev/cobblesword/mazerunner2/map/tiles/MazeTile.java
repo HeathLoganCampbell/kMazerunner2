@@ -17,6 +17,13 @@ public class MazeTile extends Tile
         basicMazeGenerator.generate();
     }
 
+    public void regenerate(int newSeed)
+    {
+        this.seed = newSeed;
+        basicMazeGenerator = new BasicMazeGenerator(seed, this.getHeight(), this.getWidth());
+        basicMazeGenerator.generate();
+    }
+
     public int getSample(int x, int y)
     {
         return basicMazeGenerator.getSample(x, y);

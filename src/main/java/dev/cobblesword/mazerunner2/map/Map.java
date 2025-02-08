@@ -17,6 +17,7 @@ public class Map
     private int tileHeight;
     private Tile[][] tiles;
     private int seed;
+    private Random random;
 
     public Map(int seed, int tileWidth, int tileHeight)
     {
@@ -24,12 +25,11 @@ public class Map
         this.tileHeight = tileHeight;
         this.tiles = new Tile[tileWidth][tileHeight];
         this.seed = seed;
+        this.random = new Random(seed);
     }
 
     public void generateMap()
     {
-        Random random = new Random(seed);
-
         this.tiles[(this.tileWidth / 6) * 3][(this.tileHeight / 6) * 3] = new TeamBaseTile(16, 16);
         this.tiles[(this.tileWidth / 6) * 3][(this.tileHeight / 6) * 5] = new TeamBaseTile(16, 16);
         this.tiles[(this.tileWidth / 6) * 5][(this.tileHeight / 6) * 3] = new TeamBaseTile(16, 16);
@@ -44,6 +44,15 @@ public class Map
                     this.tiles[i][j] = new MazeTile(random.nextInt(), 16, 16);
                 }
             }
+        }
+    }
+
+    public void regenerateTile(int tileX, int tileY)
+    {
+        Tile tile = this.tiles[tileX][tileY];
+        if(tile instanceof MazeTile tileMaze)
+        {
+            tileMaze.regenerate(this.random.nextInt(1000));
         }
     }
 
