@@ -27,6 +27,7 @@ public class GameTeam
     public void addPlayer(Player player)
     {
         this.players.add(player.getUniqueId());
+        player.sendMessage("welcome to " + name + " team");
     }
 
     public void removePlayer(Player player)
@@ -42,5 +43,9 @@ public class GameTeam
             if(player == null) continue;
             player.sendMessage(message);
         }
+    }
+
+    public int size() {
+        return this.players.size();
     }
 }
