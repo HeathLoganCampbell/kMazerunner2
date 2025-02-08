@@ -41,7 +41,7 @@ public class GameWorld
 
                     if(sample == DEADEND)
                     {
-                        this.world.getBlockAt(x * scalar, 2, z * scalar).setBlockData(Material.CHEST.createBlockData(), false);
+                        this.world.getBlockAt(x * scalar + 1, 2, z * scalar + 1).setBlockData(Material.CHEST.createBlockData(), false);
                     }
                 }
 
