@@ -3,6 +3,7 @@ package dev.cobblesword.mazerunner2.world;
 import dev.cobblesword.mazerunner2.map.Map;
 import dev.cobblesword.mazerunner2.utils.FastBlockUtil;
 import org.bukkit.*;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 
 import java.util.Random;
@@ -31,6 +32,23 @@ public class GameWorld
 //        this.world.setGameRuleValue("doDaylightCycle", "false");
         int wallHeight = 10;
 
+        BlockData stone = Material.STONE.createBlockData();
+        BlockData grassBlock = Material.GRASS_BLOCK.createBlockData();
+        BlockData stoneBrick = Material.STONE_BRICKS.createBlockData();
+        BlockData crackedStoneBricks = Material.CRACKED_STONE_BRICKS.createBlockData();
+        BlockData chest = Material.CHEST.createBlockData();
+
+        long startChunkLoading = System.currentTimeMillis();
+        for (int x = 0; x <  (this.map.getTotalWidth() * 3) >> 4; x++)
+        {
+            for (int z = 0; z < (this.map.getTotalHeight() * 3) >> 4; z++)
+            {
+                this.world.loadChunk(x, z);
+            }
+        }
+
+        System.out.println("loaded chunks in " + (System.currentTimeMillis() - startChunkLoading) + "ms");
+
         long start = System.currentTimeMillis();
         int scalar = 3;
         for (int x = 0; x < this.map.getTotalWidth(); x++) {
@@ -43,14 +61,14 @@ public class GameWorld
                         for (int dz = 0; dz < scalar; dz++) {
                             int newX = x * scalar + dx;
                             int newZ = z * scalar + dz;
-                            setBlock(newX, 1, newZ, Material.STONE);
+                            setBlock(newX, 1, newZ, stoneBrick);
                         }
                     }
 
                     if(sample == DEADEND)
                     {
                         if (random.nextInt(5) == 1) {
-                            setBlock(x * scalar + 1, 2, z * scalar + 1, Material.CHEST);
+                            setBlock(x * scalar + 1, 2, z * scalar + 1, chest);
                         }
                     }
                 }
@@ -62,9 +80,9 @@ public class GameWorld
                             int newX = x * scalar + dx;
                             int newZ = z * scalar + dz;
                             for (int i = 0; i < wallHeight; i++) {
-                                Material material = Material.STONE_BRICKS;
+                                BlockData material = stoneBrick;
                                 if (random.nextInt(3) == 1) {
-                                    material = Material.CRACKED_STONE_BRICKS;
+                                    material = crackedStoneBricks;
                                 }
 
                                 setBlock(newX, i, newZ, material);
@@ -79,7 +97,7 @@ public class GameWorld
                         for (int dz = 0; dz < scalar; dz++) {
                             int newX = x * scalar + dx;
                             int newZ = z * scalar + dz;
-                            setBlock(newX, 1, newZ, Material.GRASS_BLOCK);
+                            setBlock(newX, 1, newZ, grassBlock);
                         }
                     }
                 }
@@ -89,9 +107,9 @@ public class GameWorld
         System.out.println("Maze Generated " + (System.currentTimeMillis() - start) + "ms");
     }
 
-    private void setBlock(int x, int y, int z, Material material)
+    private void setBlock(int x, int y, int z, BlockData blockData)
     {
-        FastBlockUtil.setBlock(this.world, x, y, z, material.createBlockData());
+        FastBlockUtil.setBlock(this.world, x, y, z, blockData);
     }
 
     public void teleport(Player player)
