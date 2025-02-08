@@ -9,6 +9,7 @@ public class BasicMazeGenerator extends JPanel {
     public static final int DEADEND = 2;
     public static final int WALL = 1;
     public static final int PATH = 0;
+    public static final int TEAM_BASE = 4;
     private static final int[][] DIRECTIONS = {{0, 2}, {2, 0}, {0, -2}, {-2, 0}};
     private int[][] maze;
     private int rows, cols;

@@ -32,6 +32,7 @@ public class MazeGenerator extends JPanel {
                 if(sample1 == WALL) bufferedImage.setRGB(tileX, tileY, 0x000000);
                 if(sample1 == PATH) bufferedImage.setRGB(tileX, tileY, 0xFFFFFF);
                 if(sample1 == DEADEND) bufferedImage.setRGB(tileX, tileY, 0xFF0000);
+                if(sample1 == TEAM_BASE) bufferedImage.setRGB(tileX, tileY, 0x0000FF);
             }
         }
 
